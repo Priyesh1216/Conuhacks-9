@@ -12,6 +12,11 @@ from langchain_openai import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from langchain.chains import LLMChain
 import chainlit as cl
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)
 
 # Load environment variables
 load_dotenv()
@@ -25,7 +30,7 @@ llm = ChatOpenAI(
 
 # Create a prompt template
 prompt = ChatPromptTemplate.from_template(
-    """You are a helpful assistant. Please respond to the following question:
+    """You are a knowledeable and friendly financial wellness assistant for Sun Life.
     
     Question: {question}
     
@@ -35,22 +40,18 @@ prompt = ChatPromptTemplate.from_template(
 # Create the chain
 chain = LLMChain(llm=llm, prompt=prompt)
 
-
-@cl.on_chat_start
-def start_chat():
-    """Initialize the chat session"""
-    cl.Message(
-        content="Hello! I'm your AI assistant. How can I help you today?").send()
-
-
-@cl.on_message
-async def main(message: cl.Message):
-    """Handle incoming messages"""
-
+@app.route("/api/chat", methods=["POST"])
+def chat():
+    data = request.json
+    user_message = data.get("content")
+    
+    if not user_message:
+        return jsonify({"error": "No message provided"}), 400
+    
     # Run the chain
-    response = await chain.ainvoke(
-        {"question": message.content}
-    )
+    response = chain.invoke({"question": user_message})
+    
+    return jsonify({"message": response["text"]})
 
-    # Send the response back to the user
-    await cl.Message(content=response["text"]).send()
+if __name__ == "__main__":
+    app.run(port=8000, debug=True)
