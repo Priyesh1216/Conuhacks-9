@@ -1,30 +1,32 @@
 <a id="readme-top"></a>
 
-# Conuhacks-9
+# AI Financial Wellness Assistant
 
-Conuhacks 9 Hackathon
+This project is our submission to the Conuhacks 9 hackathon! Our assistant builds a user profile with targeted financial questions and then uses the OpenAI API to generate specific guidance and plans for any financial situation.
 
 ## Getting Started
 
-To get a local copy up and running follow these simple steps.
+For requirements, see `requirements.txt`
 
-### Prerequisites
+### How to Run
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```bash
-  npm example
-  ```
-
-### Installation
-
+To get a local copy up and running follow these steps:
 1. Clone the repo
    ```bash
    git clone https://github.com/Anthony-201-Ly/Conuhacks-9.git
+   ```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+2. Start the backend
+   ```bash
+   python app.py
+   ```
 
-## Usage
+3. Start the frontend
+   ```bash
+   npm start
+   ```
+
+The local app will be hosted at: [localhost:3000](http://localhost:3000/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -34,3 +36,5 @@ This is an example of how to list things you need to use the software and how to
 - [Lucas Santiago](https://github.com/matthew-lucas-santiago)
 - [Pryiesh Patel](https://github.com/Priyesh1216)
 - [Anthony Ly](https://github.com/Anthony-201-Ly)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
