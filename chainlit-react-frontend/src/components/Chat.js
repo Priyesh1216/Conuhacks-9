@@ -7,6 +7,7 @@ const Chat = () => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
+  
   useEffect(()=>{
     const fetchStartText = async () => {
         try{
@@ -40,7 +41,7 @@ const Chat = () => {
     try {
       setIsLoading(true);
       setMessages(prev => [...prev, { text: input, sender: "user" }]);
-      
+      setInput("");
       const response = await fetch("http://localhost:8000/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -53,7 +54,6 @@ const Chat = () => {
 
       const data = await response.json();
       setMessages(prev => [...prev, { text: data.message, sender: "bot" }]);
-      setInput("");
     } catch (error) {
       console.error("Error:", error);
       setMessages(prev => [...prev, { 
@@ -89,9 +89,19 @@ const Chat = () => {
 
   return (
     <div className="chat-container">
-      <header><button className="refresh-button" onClick={resetSession}>
-          <FaSyncAlt />
-        </button><img id="logo" src={logo} alt="BankBud Logo"></img></header>
+      <header>
+        <button className="refresh-button" onClick={resetSession}><FaSyncAlt /></button>
+        <img id="logo" src={logo} alt="BankBud Logo"></img>
+        <p id="headerText">Powered by OpenAI</p>
+      </header>
+        <div id="links">
+          <p id="useful">USEFUL LINKS</p>
+          <ul id="list">
+            <li><a class="list-item-link" href="https://www.sunlife.ca/en/investments/" target="_blank" rel="noopener noreferrer">Investments</a></li>
+            <li><a class="list-item-link" href="https://www.sunlife.ca/en/insurance/" target="_blank" rel="noopener noreferrer">Insurance</a></li>
+            <li><a class="list-item-link" href="https://www.sunlife.ca/en/health/" target="_blank" rel="noopener noreferrer">Health Insurance</a></li>
+          </ul>
+        </div>
       <div className="messages-area">
         {messages.map((msg, i) => (
           <div
@@ -112,7 +122,7 @@ const Chat = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyPress={handleKeyPress}
-          placeholder="Type your message..."
+          placeholder={isLoading? "Loading..." : "Type your message..."}
           disabled={isLoading}
         />
         <button
@@ -123,6 +133,7 @@ const Chat = () => {
             <FaArrowUp />
         </button>
       </div>
+      <footer>Please carefully review important financial decisions!</footer>
     </div>
   );
 };

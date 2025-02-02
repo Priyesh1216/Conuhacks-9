@@ -8,12 +8,17 @@ body{
 }
 
 header{
+    color:white;
     background-color:black;
     height:100px;
     display: flex;
     justify-content: center; /* Centers horizontally */
     align-items: center; /* Centers vertically */
     position: relative;
+}
+
+#headerText{
+    margin-left:20px;
 }
 
 .messages-area{
@@ -25,7 +30,7 @@ header{
     margin: auto;
     padding: 10px;
     width: 700px;
-    height: 490px;
+    height: 470px;
     overflow-y: auto; 
     margin-bottom: 80px;
     box-shadow:0 2px 4px 0 #00000007, 0 6px 20px 0 #00000030;
@@ -128,4 +133,43 @@ header{
 #logo{
     width:100px;
     margin-bottom:5px;
+}
+
+footer{
+    color:white;
+    margin-left:5px;
+}
+
+#links {
+    position: absolute;
+    margin:30px;
+    width: 200px;
+    padding: 10px;
+    background-color: black;
+    border: 2px solid black;
+    box-shadow: 0 2px 4px 0 #00000007, 0 6px 20px 0 #00000030;
+    border-radius: 10px;
+    font-family: "Cream";
+    text-align: center;
+    color:white;
+}
+
+#list{
+    list-style-type:none;
+    text-align:left;
+}
+
+.list-item-link{
+    text-decoration:none;
+    color:white;
+}
+
+.list-item-link:hover{
+    cursor:pointer;
+    color:#eef884;
+    transition:0.35s ease;
+}
+
+#useful{
+    font-size:20px;
 }
