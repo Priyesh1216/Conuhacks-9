@@ -54,6 +54,9 @@ prompt = ChatPromptTemplate.from_template(
 
 # Create the chain
 chain = LLMChain(llm=llm, prompt=prompt)
+@app.route("/")
+def start_chat():
+    return jsonify({"message": "Hello! I am your AI financial advisor! What can I help you with?"})
 
 class UserSession:
     def __init__(self):
