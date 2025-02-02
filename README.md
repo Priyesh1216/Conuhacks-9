@@ -6,7 +6,12 @@ This project is our submission to the Conuhacks 9 hackathon! Our assistant build
 
 ## Getting Started
 
-For requirements, see `requirements.txt`
+### Built With
+
+- OpenAI Api
+- React
+- LangChain
+- Flask
 
 ### How to Run
 
@@ -16,25 +21,28 @@ To get a local copy up and running follow these steps:
    git clone https://github.com/Anthony-201-Ly/Conuhacks-9.git
    ```
 
-2. Start the backend
+2. Install dependencies
+   ```bash
+   npm install
+   ```
+
+    > **_NOTE:_**  The following 2 commands have to be run in different terminals.
+3. Start the backend
    ```bash
    python app.py
    ```
 
-3. Start the frontend
+4. In `chainlit-react-frontend`, start the frontend
    ```bash
    npm start
    ```
 
 The local app will be hosted at: [localhost:3000](http://localhost:3000/)
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 ## Team Members
 
 - [Darcy McCoy](https://github.com/darcymccoy)
 - [Lucas Santiago](https://github.com/matthew-lucas-santiago)
 - [Pryiesh Patel](https://github.com/Priyesh1216)
-- [Anthony Ly](https://github.com/Anthony-201-Ly)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

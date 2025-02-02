@@ -20,7 +20,7 @@ llm = ChatOpenAI(
     openai_api_key=os.getenv("OPENAI_API_KEY")
 )
 
-# Question Templates and Constants
+# Question Templates and Constants for financial goals
 GOAL_CATEGORIES = {
     "1": "Budgeting & Expense Tracking",
     "2": "Debt Management",
@@ -29,6 +29,7 @@ GOAL_CATEGORIES = {
     "5": "Other Financial Goals"
 }
 
+# Questions based on the chosen goal
 GOAL_SPECIFIC_QUESTIONS = {
     "1": [  # Budgeting & Expense Tracking
         "What's your monthly income after tax?",
@@ -80,7 +81,7 @@ INITIAL_QUESTIONS = [
 
 # Chain Prompts
 profile_analysis_prompt = ChatPromptTemplate.from_template(
-    """Analyze the following user financial profile and provide a summary:
+    """You are a friendly assistant that helps users with finance. Only answer finance questions. Speak to the user in first person. Analyze the following user financial profile and provide a summary:
     
     Age/Employment: {age_employment}
     Financial Goals: {financial_goals}
@@ -91,8 +92,22 @@ profile_analysis_prompt = ChatPromptTemplate.from_template(
     """
 )
 
+general_generation_prompt = ChatPromptTemplate.from_template(
+    """You are a financial assistant who is friendly and concise. Based on this question, answer specifically while provding possible information about Sunlife. Keep it consise and speak to the user in first person. generate specific financial strategies:
+    
+    {question}
+    
+    Provide:
+    1. A consise answer
+    2. Possible information about Sunlife
+    3. Three key financial priorities with action items
+    4. Keep it brief to about 100 words
+
+    """
+)
+
 strategy_generation_prompt = ChatPromptTemplate.from_template(
-    """Based on this profile summary, generate specific financial strategies:
+    """Based on this profile summary, generate specific financial strategies for Canadian users:
     
     {profile_summary}
     
@@ -106,7 +121,7 @@ strategy_generation_prompt = ChatPromptTemplate.from_template(
 )
 
 recommendations_prompt = ChatPromptTemplate.from_template(
-    """Using the profile and strategies, create comprehensive recommendations:
+    """Using the profile and strategies, create comprehensive recommendations for Canadian users:
     
     Profile: {profile_summary}
     Strategies: {strategy_recommendations}
@@ -147,19 +162,21 @@ recommendations_prompt = ChatPromptTemplate.from_template(
     """
 )
 
-# Initialize Chain Components
+# Initialize AI processing chain
 profile_chain = LLMChain(
     llm=llm,
     prompt=profile_analysis_prompt,
     output_key="profile_summary"
 )
 
+# Initialize AI processing chain
 strategy_chain = LLMChain(
     llm=llm,
     prompt=strategy_generation_prompt,
     output_key="strategy_recommendations"
 )
 
+# Initialize AI processing chain
 recommendations_chain = LLMChain(
     llm=llm,
     prompt=recommendations_prompt,
@@ -173,6 +190,13 @@ financial_advisor_chain = SequentialChain(
                      "risk_tolerance", "goal_specific_details"],
     output_variables=["profile_summary",
                       "strategy_recommendations", "final_recommendations"]
+)
+
+# Create a general-purpose financial response chain
+general_chat_chain = LLMChain(
+    llm=llm,
+    prompt=general_generation_prompt,
+    output_key="general_response"
 )
 
 
@@ -291,26 +315,42 @@ def chat():
         if not user_message:
             return jsonify({"error": "No message provided"}), 400
 
+        # Initialize session if not exists
         if session_id not in sessions:
             sessions[session_id] = UserSession()
 
         session = sessions[session_id]
 
+        # Step 1: Handle Initial Profile Questions
         if not session.has_completed_basic_questions:
             return handle_basic_questions(session, user_message)
 
+        # Step 2: Handle Goal-Specific Questions
         if not session.has_completed_all_questions:
             return handle_goal_questions(session, user_message)
 
-        chain_response = financial_advisor_chain.invoke({
-            **session.user_responses,
-            "current_question": user_message
-        })
+        # Step 3: Generate financial recommendations once all required inputs are provided
+        if not session.has_completed_all_questions:
+            recommendations = generate_recommendations(session)
+            session.has_completed_all_questions = True  # Mark advising phase as complete
+
+            return jsonify({
+                "message": (
+                    "Thank you for sharing your financial information! Here are my personalized recommendations:\n\n"
+                    f"{recommendations}\n\n"
+                    "Feel free to ask any follow-up questions about these recommendations."
+                ),
+                "is_question": False,
+                "user_profile": session.user_responses
+            })
+
+        # Step 4: Now that financial advising is complete, switch to general chat mode
+        general_response = general_chat_chain.invoke(
+            {"question": user_message})
 
         return jsonify({
-            "message": chain_response["final_recommendations"],
-            "is_question": False,
-            "user_profile": session.user_responses
+            "message": general_response["general_response"],
+            "is_question": False
         })
 
     except Exception as e:
@@ -334,7 +374,7 @@ def reset_session():
 @app.route("/")
 def start_chat():
     """Initialize chat session"""
-    return jsonify({"message": "Welcome to your AI financial advisor! How can I help you today?"})
+    return jsonify({"message": "Welcome to your AI financial advisor! How can I help you today? Let's start with some questions to help me understand your situation. Type OK to continue."})
 
 
 if __name__ == "__main__":
