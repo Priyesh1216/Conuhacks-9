@@ -1,32 +1,41 @@
 @font-face{
-    font-family:'Coco Goose';
-    src:local('Coco Goose'), url(./fonts/Cocogoose-Classic-Medium-trial.ttf) format('truetype');
+    font-family:'Cream';
+    src:local('Cream'), url(./fonts/cream-DEMO.ttf) format('truetype');
 }
 
 body{
-    background-color:#e0e1dd;
+    background-color:#9d9d9d;
 }
 
 header{
     background-color:black;
+    height:100px;
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    position: relative;
 }
 
 .messages-area{
     display: flex;
+    background-color:#e0e1dd;
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
     margin: auto;
     padding: 10px;
     width: 700px;
-    height: 600px;
+    height: 490px;
     overflow-y: auto; 
-    margin-bottom: 80px; 
+    margin-bottom: 80px;
+    box-shadow:0 2px 4px 0 #00000007, 0 6px 20px 0 #00000030;
+    border-bottom-right-radius:30px;
+    border-bottom-left-radius:30px;
 }
 
 .message{
-    font-family:"Coco Goose";
-    font-size:20px;
+    font-family:"Cream";
+    font-size:18px;
     border-radius:29px;
     width:350px;
     margin:20px;
@@ -53,7 +62,7 @@ header{
     bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
-    border-radius: 25px;
+    border-radius: 30px;
     padding: 10px;
     width: 700px;
     background-color: #000000;
@@ -63,7 +72,7 @@ header{
 .message-input{
     background-color:transparent;
     border:none;
-    font-family:"Coco Goose";
+    font-family:"Cream";
     font-size:20px;
     padding:5px;
     width:93%;
@@ -95,4 +104,28 @@ header{
 
 .send-button:disabled{
     display:none;
+}
+
+.refresh-button{
+    position: absolute;
+    left: 10px;
+    bottom:10px;
+    border:none;
+    border-radius:999px;
+    margin:15px;
+    width:30px;
+    height:30px;
+    font-size:12px;
+    box-shadow: 0 2px 4px 0 #00000007, 0 6px 20px 0 #00000030;
+}
+
+.refresh-button:hover{
+    background-color:rgb(188, 188, 188);
+    cursor:pointer;
+    transition:0.35s ease;
+}
+
+#logo{
+    width:100px;
+    margin-bottom:5px;
 }
