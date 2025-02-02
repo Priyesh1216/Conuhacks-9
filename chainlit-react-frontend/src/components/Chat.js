@@ -1,9 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import "./styles/Chat.css";
+import { FaArrowUp } from "react-icons/fa";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef(null);
+  useEffect(()=>{
+    const fetchStartText = async () => {
+        try{
+            const response = await fetch("http://localhost:8000/", {
+                headers: { "Content-Type": "application/json" }
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+        
+              const data = await response.json();
+              setMessages([{ text: data.message, sender: "bot" }]);
+        } catch(error){
+            console.error("Error:", error);
+        }
+    };
+    fetchStartText();
+  }, []);
+
+  useEffect(() => {
+    // Scroll to the bottom whenever messages update
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -57,6 +86,7 @@ const Chat = () => {
             </div>
           </div>
         ))}
+        <div ref={messagesEndRef}></div>
       </div>
       
       <div className="input-area">
@@ -73,7 +103,7 @@ const Chat = () => {
           onClick={sendMessage}
           disabled={isLoading}
         >
-          {isLoading ? "..." : "Send"}
+            <FaArrowUp />
         </button>
       </div>
     </div>
