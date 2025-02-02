@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./styles/Chat.css";
-import { FaArrowUp } from "react-icons/fa";
-
+import { FaArrowUp, FaSyncAlt } from "react-icons/fa";
+import logo from "./images/BankBud-Logo.png";
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -66,6 +66,20 @@ const Chat = () => {
     }
   };
 
+  const resetSession = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/api/reset", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_id: "default" }),
+      });
+      const data = await response.json();
+      setMessages([{ text: data.message, sender: "bot" }, {text: "Hello! I am your AI financial advisor! Let's start with some questions that will help me understand your situation. Type OK to continue", sender: "bot"}]);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -75,6 +89,9 @@ const Chat = () => {
 
   return (
     <div className="chat-container">
+      <header><button className="refresh-button" onClick={resetSession}>
+          <FaSyncAlt />
+        </button><img id="logo" src={logo} alt="BankBud Logo"></img></header>
       <div className="messages-area">
         {messages.map((msg, i) => (
           <div
