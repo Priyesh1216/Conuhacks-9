@@ -43,6 +43,6 @@ The local app will be hosted at: [localhost:3000](http://localhost:3000/)
 
 - [Darcy McCoy](https://github.com/darcymccoy)
 - [Lucas Santiago](https://github.com/matthew-lucas-santiago)
-- [Pryiesh Patel](https://github.com/Priyesh1216)
+- [Priyesh Patel](https://github.com/Priyesh1216)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
